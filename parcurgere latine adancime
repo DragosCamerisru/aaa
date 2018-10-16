@@ -1,0 +1,87 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+const int MAXBUFFER = 20;
+int a[MAXBUFFER][MAXBUFFER],c[MAXBUFFER],v[MAXBUFFER],ns,n,contor,contor1;
+int prim,ultim;
+
+void citire(int a[MAXBUFFER][MAXBUFFER],int &n)
+{ifstream f("graf.in");
+    int x,y;
+    f>>n;
+    while(f>>x>>y)
+        a[x][y]=a[y][x]=1;
+    f.close();
+}
+void afisare(int a[MAXBUFFER][MAXBUFFER],int n)
+{
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=n;j++)
+            cout<<a[i][j]<<" ";
+            cout<<endl;
+    }
+}
+int nod_nevizitat(int v[MAXBUFFER],int n)
+{
+    for(int i=1;i<=n;i++)
+        if(v[i]==0)
+            return i;
+    return 0;
+}
+void parcurgerea_in_latime(int a[MAXBUFFER][MAXBUFFER],int n,int ns)
+{
+    contor=contor+1;
+    v[ns] = 1;
+    cout<<"componenta conexa: "<<contor<<" este format din nodurile: ";
+    cout<<ns<<" ";
+    prim = ultim = 1;
+    c[ultim] = ns;
+    while(prim<=ultim)
+    {
+        for(int i=1;i<=n;i++)
+            if(a[c[prim]][i]==1)
+                if(v[i]==0)
+                {
+                    ultim++;
+                    c[ultim] = i;
+                    cout<<i<<" ";
+                    v[i] = 1;
+                }
+                prim++;
+    }
+    cout<<endl;
+}
+void parcurgerea_in_adancime(int ns)
+{
+    contor1++;
+    v[ns] = 1;
+    cout<<" componenta Conexa: "<<contor1<<" este format din Nodurile: ";
+    cout<<ns<<" "<<endl;
+    for(int i =1;i<=n;i++)
+        if(a[ns][i]==1 && v[i]==0)
+            parcurgerea_in_adancime(i);
+
+}
+int main()
+{
+    citire(a,n);
+    afisare(a,n);
+    cout<<"dati nodul de start: ";cin>>ns;
+    /**parcurgerea_in_latime(a,n,ns);
+    while(nod_nevizitat(v,n)!=0)
+    {
+        ns = nod_nevizitat(v,n);
+        parcurgerea_in_latime(a,n,ns);
+    }
+    cout<<"graful este alcatuit din "<<contor<<" componente conexe: ";
+    cout<<endl;*/
+    parcurgerea_in_adancime(ns);
+    while(nod_nevizitat(v,n)!=0)
+    {
+        ns = nod_nevizitat(v,n);
+        parcurgerea_in_adancime(ns);
+    }
+    cout<<"graful este alcatuit din "<<contor1<<" componente conexe: ";
+    return 0;
+}
